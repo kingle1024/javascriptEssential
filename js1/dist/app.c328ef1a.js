@@ -130,28 +130,20 @@ var newsFeed = JSON.parse(ajax.response); // console.log(newsFeed);
 
 var ul = document.createElement('ul');
 window.addEventListener('hashchange', function () {
-  // console.log('해시가 변경됨');
   var id = location.hash.substring(1);
   ajax.open('GET', CONTENT_URL.replace('@id', id), false);
   ajax.send();
-  var newsContent = JSON.parse(ajax.response); // console.log(newsContent);
-
+  var newsContent = JSON.parse(ajax.response);
   var title = document.createElement('h1');
   title.innerHTML = newsContent.title;
-  content.appendChild(title); // document.getElementsByTagName(`#${newsContent.id}`).appendChild(content);
-  // console.log(document.getElementsByTagName(`#${newsContent.id}`));
+  content.appendChild(title);
 });
 
 for (var i = 0; i < 10; i++) {
-  var li = document.createElement('li'); // li.append(newsFeed[i].title);
+  var div = document.createElement('div');
+  div.innerHTML = "\n    <li>\n        <a href=\"#".concat(newsFeed[i].id, "\">\n            ").concat(newsFeed[i].title, " (").concat(newsFeed[i].comments_count, ")\n        </a>\n    </li>\n    "); // a.addEventListener('click', function() {});
 
-  var a = document.createElement('a');
-  a.href = "#".concat(newsFeed[i].id); // newsFeed[i].url;
-
-  a.innerHTML = "".concat(newsFeed[i].title, " (").concat(newsFeed[i].comments_count, ")");
-  a.addEventListener('click', function () {});
-  li.append(a);
-  ul.appendChild(li);
+  ul.appendChild(div.firstElementChild); // div.children[0] == div.firstElementChild
 }
 
 container.appendChild(ul);
@@ -184,7 +176,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59777" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60334" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

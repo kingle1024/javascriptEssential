@@ -12,25 +12,20 @@ const newsFeed = JSON.parse(ajax.response);
 const ul = document.createElement('ul');
 
 window.addEventListener('hashchange', function(){
-    // console.log('해시가 변경됨');
     const id = location.hash.substring(1);
     
     ajax.open('GET', CONTENT_URL.replace('@id',id), false);
     ajax.send();
+
     const newsContent = JSON.parse(ajax.response);
-    // console.log(newsContent);
     const title = document.createElement('h1');
-    title.innerHTML = newsContent.title;
-    content.appendChild(title);
     
-    // document.getElementsByTagName(`#${newsContent.id}`).appendChild(content);
-    // console.log(document.getElementsByTagName(`#${newsContent.id}`));
+    title.innerHTML = newsContent.title;
+ 
+    content.appendChild(title);
 });
 for(let i = 0; i<10; i++){
     const div = document.createElement('div');
-    const li = document.createElement('li');
-    // li.append(newsFeed[i].title);
-    const a  = document.createElement('a');
     
     div.innerHTML = `
     <li>
@@ -39,11 +34,9 @@ for(let i = 0; i<10; i++){
         </a>
     </li>
     `;
+    // a.addEventListener('click', function() {});
 
-    a.addEventListener('click', function() {});
-
-    li.append(a);
-    ul.appendChild(li);
+    ul.appendChild(div.firstElementChild); // div.children[0] == div.firstElementChild
 }    
 
 
