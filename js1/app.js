@@ -11,34 +11,47 @@ function getDate(url) {
     return JSON.parse(ajax.response);
 }
 
-const newsFeed = getDate(NEWS_URL);
-const ul = document.createElement('ul');
+function newsFeed(){
+    const newsFeed = getDate(NEWS_URL);
+    const newsList = [];
+    newsList.push('<ul>');
+    for(let i = 0; i<10; i++){
+        const div = document.createElement('div');    
+        newsList.push(`
+        <li>
+            <a href="#${newsFeed[i].id}">
+                ${newsFeed[i].title} (${newsFeed[i].comments_count})
+            </a>
+        </li>
+        `);
+    }    
+    
+    newsList.push('</ul>');
+    container.innerHTML = newsList.join(''); // join 함수가 ,를 기본으로 없애준다.
+}
 
-window.addEventListener('hashchange', function(){
+function newsDetail(){
     const id = location.hash.substring(1);
-    
     const newsContent = getDate(CONTENT_URL.replace('@id',id));
-    const title = document.createElement('h1');
+
+    container.innerHTML = `
+    <h1>${newsContent.title}</h1>
     
-    title.innerHTML = newsContent.title;
- 
-    content.appendChild(title);
-});
-for(let i = 0; i<10; i++){
-    const div = document.createElement('div');
-    
-    div.innerHTML = `
-    <li>
-        <a href="#${newsFeed[i].id}">
-            ${newsFeed[i].title} (${newsFeed[i].comments_count})
-        </a>
-    </li>
+    <div> 
+        <a href="#">목록으로</a>
+    </div>
     `;
-    // a.addEventListener('click', function() {});
+}
 
-    ul.appendChild(div.firstElementChild); // div.children[0] == div.firstElementChild
-}    
+function router(){
+    const routePath = location.hash;
+    console.log(routePath);
+    if(routePath === '') // location.hash에 #만 들어 있을 때에는 자동으로 #을 빼준다.
+        newsFeed();
+    else
+        newsDetail();
+}
 
+window.addEventListener('hashchange', router);
 
-container.appendChild(ul);
-container.appendChild(content);
+router();
