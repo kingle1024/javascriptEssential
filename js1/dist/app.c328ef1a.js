@@ -123,17 +123,18 @@ var container = document.getElementById('root');
 var NEWS_URL = 'https://api.hnpwa.com/v0/news/1.json';
 var CONTENT_URL = 'https://api.hnpwa.com/v0/item/@id.json';
 var content = document.createElement('div');
-ajax.open('GET', NEWS_URL, false);
-ajax.send(); // 실제 데이터를 가져오는 시점
 
-var newsFeed = JSON.parse(ajax.response); // console.log(newsFeed);
+function getDate(url) {
+  ajax.open('GET', url, false);
+  ajax.send();
+  return JSON.parse(ajax.response);
+}
 
+var newsFeed = getDate(NEWS_URL);
 var ul = document.createElement('ul');
 window.addEventListener('hashchange', function () {
   var id = location.hash.substring(1);
-  ajax.open('GET', CONTENT_URL.replace('@id', id), false);
-  ajax.send();
-  var newsContent = JSON.parse(ajax.response);
+  var newsContent = getDate(CONTENT_URL.replace('@id', id));
   var title = document.createElement('h1');
   title.innerHTML = newsContent.title;
   content.appendChild(title);
