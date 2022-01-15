@@ -144,14 +144,14 @@ function newsFeed() {
   }
 
   newsList.push('</ul>');
-  newsList.push("\n        <div>\n            <a href=\"#/page/".concat(store.currentPage > 1 ? store.currentPage - 1 : 1, "\">\uC774\uC804 \uD398\uC774\uC9C0</a>\n            <a href=\"#/page/").concat(store.currentPage + 1, "\">\uB2E4\uC74C \uD398\uC774\uC9C0</a>\n        </div>\n    "));
+  newsList.push("\n        <div>\n            <a href=\"#/page/".concat(store.currentPage - 1, "\">\uC774\uC804 \uD398\uC774\uC9C0</a>\n            <a href=\"#/page/").concat(store.currentPage + 1, "\">\uB2E4\uC74C \uD398\uC774\uC9C0</a>\n        </div>\n    "));
   container.innerHTML = newsList.join(''); // join 함수가 ,를 기본으로 없애준다.
 }
 
 function newsDetail() {
-  var id = location.hash.substring(7);
+  var id = location.hash.substring(1);
   var newsContent = getDate(CONTENT_URL.replace('@id', id));
-  container.innerHTML = "\n    <h1>".concat(newsContent.title, "</h1>\n    \n    <div> \n        <a href=\"#/page/").concat(store.currentPage, "\">\uBAA9\uB85D\uC73C\uB85C</a>\n    </div>\n    ");
+  container.innerHTML = "\n    <h1>".concat(newsContent.title, "</h1>\n    \n    <div> \n        <a href=\"#\">\uBAA9\uB85D\uC73C\uB85C</a>\n    </div>\n    ");
 }
 
 function router() {
@@ -160,9 +160,9 @@ function router() {
   if (routePath === '') // location.hash에 #만 들어 있을 때에는 자동으로 #을 빼준다.
     newsFeed();else if (routePath.indexOf('#/page/') >= 0) {
     // 
-    // store.currentPage = 1;
-    console.log(routePath.substr(7));
-    store.currentPage = Number(routePath.substr(7));
+    console.log(routePath); // store.currentPage = 1;
+
+    store.currentPage = Number(routePath).substr(7);
     newsFeed();
   } else newsDetail();
 }
@@ -197,7 +197,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63070" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62858" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
@@ -374,4 +374,4 @@ function hmrAcceptRun(bundle, id) {
   }
 }
 },{}]},{},["../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js","app.js"], null)
-//# sourceMappingURL=/app.c328ef1a.js.map
+//# sourceMappingURL=/app.js.map
