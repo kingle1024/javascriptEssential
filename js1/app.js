@@ -4,17 +4,27 @@ const content = document.createElement('div');
 const NEWS_URL = 'https://api.hnpwa.com/v0/news/1.json';
 const CONTENT_URL = 'https://api.hnpwa.com/v0/item/@id.json';
 const store = {
-    currentPage : 1,
+    currentPage: 1,
+    feeds: [],
 };
 
 function getDate(url) {
     ajax.open('GET', url, false);
     ajax.send();
+
     return JSON.parse(ajax.response);
 }
 
+function makeFeeds(feeds){
+    for(let i=0; i<feeds.length; i++){
+        feeds[i].read = false;
+    }
+    
+    return feeds;
+}
+
 function newsFeed(){
-    const newsFeed = getDate(NEWS_URL);
+    let newsFeed = store.feeds;
     const newsList = []; 
     // x는 폭, y는 높이
     let template = `
@@ -42,10 +52,14 @@ function newsFeed(){
         </div>
     `;
 
+    if(newsFeed.length === 0){
+        newsFeed = store.feeds = makeFeeds(getDate(NEWS_URL)); // js는 연속으로 넣어주는 것 가능함.
+    }
+
     for(let i = (store.currentPage - 1) * 10; i < store.currentPage * 10; i++){
         // const div = document.createElement('div');    
         newsList.push(`
-        <div class="p-6 bg-white mt-6 rounded-lg shadow-md transition-colors duration-500 hover:bg-green-100">
+        <div class="p-6 ${newsFeed[i].read ? 'bg-red-500' : 'bg-white'} mt-6 rounded-lg shadow-md transition-colors duration-500 hover:bg-green-100">
         <div class="flex">
             <div class="flex-auto">
                 <a href="#/show/${newsFeed[i].id}">${newsFeed[i].title}</a>
@@ -74,6 +88,7 @@ function newsFeed(){
 function newsDetail(){
     const id = location.hash.substring(7);
     const newsContent = getDate(CONTENT_URL.replace('@id',id));
+    
     let template = `
         <div class="bg-gray-600 min-h-screen pb-8">
             <div class="bg-white text-xl">
@@ -101,7 +116,14 @@ function newsDetail(){
                 {{__comments__}}
             </div>
         </div>
-    `;
+    `; 
+    for(let i=0; i<store.feeds.length; i++){
+        if(store.feeds[i].id === Number(id)){
+            store.feeds[i].read = true;
+            break;
+        }
+    }
+
     function makeComment(comments, called = 0){
         const commentString = [];
         for(let i = 0; i < comments.length; i++){
